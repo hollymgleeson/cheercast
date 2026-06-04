@@ -28,7 +28,7 @@ const emptyForm = {
 }
 
 export default function AddAthleteModal({ open, onClose, onCreated }) {
-  const { gymId } = useAuth()
+  const { gymId, ageDivisionConfig } = useAuth()
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -40,7 +40,7 @@ export default function AddAthleteModal({ open, onClose, onCreated }) {
 
   // Auto-calculate age division from DOB
   const ageDivision = form.date_of_birth
-    ? getAgeDivision(form.date_of_birth, CURRENT_YEAR)
+    ? getAgeDivision(form.date_of_birth, CURRENT_YEAR, ageDivisionConfig)
     : null
 
   async function handleSubmit(e) {

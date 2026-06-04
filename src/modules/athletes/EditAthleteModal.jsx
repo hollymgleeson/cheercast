@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { updateAthlete } from '../../lib/supabase'
 import { getAgeDivision } from '../../utils/usasf-rules'
+import { useAuth } from '../../context/AuthContext'
 import Modal from '../../components/Modal'
 import Button from '../../components/Button'
 import { formatPhoneInput } from '../../utils/formatters'
@@ -8,6 +9,7 @@ import { formatPhoneInput } from '../../utils/formatters'
 const CURRENT_YEAR = new Date().getFullYear()
 
 export default function EditAthleteModal({ open, onClose, athlete, onUpdated }) {
+  const { ageDivisionConfig } = useAuth()
   const [form, setForm] = useState({})
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -39,7 +41,7 @@ export default function EditAthleteModal({ open, onClose, athlete, onUpdated }) 
   }
 
   const ageDivision = form.date_of_birth
-    ? getAgeDivision(form.date_of_birth, CURRENT_YEAR)
+    ? getAgeDivision(form.date_of_birth, CURRENT_YEAR, ageDivisionConfig)
     : null
 
   async function handleSubmit(e) {

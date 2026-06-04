@@ -113,8 +113,8 @@ export function checkCrossoverMaximum(athlete, assignments) {
   return null
 }
 
-export function checkAgeDivision(athlete, team, seasonYear) {
-  const athleteDiv = getAgeDivision(athlete.date_of_birth, seasonYear)
+export function checkAgeDivision(athlete, team, seasonYear, customConfig = null) {
+  const athleteDiv = getAgeDivision(athlete.date_of_birth, seasonYear, customConfig)
   const divOrder = ['tiny', 'mini', 'youth', 'junior', 'senior', 'open']
   const athleteIndex = divOrder.indexOf(athleteDiv)
   const teamIndex = divOrder.indexOf(team.age_division)

@@ -90,7 +90,7 @@ function normalizeTier(val) {
 }
 
 export default function ImportAthletesModal({ open, onClose, onImported }) {
-  const { gymId } = useAuth()
+  const { gymId, ageDivisionConfig } = useAuth()
   const fileRef = useRef()
   const [step, setStep] = useState('upload') // upload | map | preview | importing | done
   const [csvData, setCsvData] = useState(null)
@@ -185,7 +185,7 @@ export default function ImportAthletesModal({ open, onClose, onImported }) {
     })
     // Auto-calculate age division
     if (athlete.date_of_birth) {
-      athlete.age_division = getAgeDivision(athlete.date_of_birth, CURRENT_YEAR)
+      athlete.age_division = getAgeDivision(athlete.date_of_birth, CURRENT_YEAR, ageDivisionConfig)
     }
     athlete.status = athlete.status || 'active'
     athlete.gym_id = gymId

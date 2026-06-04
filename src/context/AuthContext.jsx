@@ -6,6 +6,7 @@ const AuthContext = createContext({})
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [gymSettings, setGymSettings] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -38,6 +39,15 @@ export function AuthProvider({ children }) {
         .single()
       if (error) throw error
       setProfile(data)
+      // Also load gym settings for age division config etc.
+      if (data?.gym_id) {
+        const { data: gym } = await supabase
+          .from('gyms')
+          .select('settings')
+          .eq('id', data.gym_id)
+          .single()
+        setGymSettings(gym?.settings || null)
+      }
     } catch (err) {
       console.error('Error fetching profile:', err.message)
     } finally {
@@ -48,6 +58,7 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     profile,
+    gymSettings,
     loading,
     gymId: profile?.gym_id,
     role: profile?.role,
@@ -56,6 +67,7 @@ export function AuthProvider({ children }) {
     isEvalOnly: profile?.role === 'eval_only',
     isChoreographer: profile?.role === 'choreographer',
     isAthleteParent: profile?.role === 'athlete_parent',
+    ageDivisionConfig: gymSettings?.age_division_config || null,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

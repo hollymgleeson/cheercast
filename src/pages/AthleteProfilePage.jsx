@@ -39,7 +39,7 @@ function Field({ label, value, fallback = '—' }) {
 
 export default function AthleteProfilePage() {
   const { id } = useParams()
-  const { gymId, isOwner, isCoach } = useAuth()
+  const { gymId, isOwner, isCoach, ageDivisionConfig } = useAuth()
   const navigate = useNavigate()
   const [athlete, setAthlete] = useState(null)
   const [preferences, setPreferences] = useState(null)
@@ -112,7 +112,7 @@ export default function AthleteProfilePage() {
   }
 
   const ageDivision = athlete.date_of_birth
-    ? getAgeDivision(athlete.date_of_birth, CURRENT_YEAR)
+    ? getAgeDivision(athlete.date_of_birth, CURRENT_YEAR, ageDivisionConfig)
     : athlete.age_division
 
   const heightDisplay = athlete.height_inches
