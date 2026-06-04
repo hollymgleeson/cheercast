@@ -30,3 +30,15 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+
+# Claude Code local settings (may contain API keys)
+.claude/settings.local.json
+.claude-memory/
+
+# CSV files with athlete data — never commit
+*.csv
+*.numbers
+
+# Registration/eval data
+2026*
+26-27*
