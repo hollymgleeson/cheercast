@@ -229,7 +229,7 @@ export function checkPromotionReady(athlete, skills) {
 
 // ─── Main Runner ──────────────────────────────────────────────────────────────
 
-export function runAllChecks({ athlete, team, allAssignments, seasonYear, eliteCount }) {
+export function runAllChecks({ athlete, team, allAssignments, seasonYear, eliteCount, customConfig = null }) {
   const flags = []
 
   if (athlete && allAssignments) {
@@ -242,7 +242,7 @@ export function runAllChecks({ athlete, team, allAssignments, seasonYear, eliteC
 
   if (athlete && team) {
     if (athlete.date_of_birth && seasonYear) {
-      const ageFl = checkAgeDivision(athlete, team, seasonYear)
+      const ageFl = checkAgeDivision(athlete, team, seasonYear, customConfig)
       if (ageFl) flags.push(ageFl)
     }
 

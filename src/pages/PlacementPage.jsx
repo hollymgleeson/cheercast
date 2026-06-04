@@ -475,7 +475,7 @@ function ScenariosModal({ scenarios, onSelect, onClose }) {
 // ─── Main Placement Page ──────────────────────────────────────────────────────
 
 export default function PlacementPage() {
-  const { gymId } = useAuth()
+  const { gymId, ageDivisionConfig } = useAuth()
 
   const [teams, setTeams] = useState([])
   const [allAthletes, setAllAthletes] = useState([])
@@ -613,7 +613,7 @@ export default function PlacementPage() {
       }
       athletes.forEach(athlete => {
         if (!athlete.date_of_birth) return
-        newFlags.push(...runAllChecks({ athlete, team, allAssignments, seasonYear: team.season_year || seasonYear }))
+        newFlags.push(...runAllChecks({ athlete, team, allAssignments, seasonYear: team.season_year || seasonYear, customConfig: ageDivisionConfig }))
       })
     })
 
