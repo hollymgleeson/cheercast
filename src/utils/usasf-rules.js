@@ -28,20 +28,19 @@ export function getAgeDivision(dateOfBirth, seasonYear, customConfig = null) {
     const mode = customConfig.mode || 'birth_year'
 
     if (mode === 'birth_year') {
-      // Sort divisions by cutoff_birth_year descending (oldest division first)
+      // Sort descending (highest/youngest cutoff first: 2019, 2017, 2015...)
+      // Find the FIRST division where birthYear >= cutoff (youngest match wins)
       const sorted = [...customConfig.divisions]
         .filter(d => d.cutoff_birth_year)
-        .sort((a, b) => a.cutoff_birth_year - b.cutoff_birth_year)
+        .sort((a, b) => b.cutoff_birth_year - a.cutoff_birth_year)
 
-      // Find the division: athlete must be born in cutoff_birth_year or later
-      // The youngest division with cutoff_birth_year >= athlete's birth year
       for (const div of sorted) {
         if (birthYear >= div.cutoff_birth_year) {
           return div.name || div.label?.toLowerCase().replace(/\s*\(.*\)/, '').trim()
         }
       }
-      // If birth year is older than all cutoffs, return the oldest division
-      return sorted[0]?.name || 'senior'
+      // Older than all cutoffs -- return oldest division
+      return sorted[sorted.length - 1]?.name || 'senior'
     } else {
       // Age cutoff mode
       const age = calculateAgeOnCutoff(dateOfBirth, seasonYear)
