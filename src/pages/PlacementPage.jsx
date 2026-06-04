@@ -81,10 +81,10 @@ function AthleteCard({ athlete, flags = [], isDragging = false, onClick, onCross
             {onCrossover && availableTeams.length > 0 && (
               <button
                 onClick={e => { e.stopPropagation(); onCrossover(athlete, availableTeams) }}
-                className="w-5 h-5 rounded flex items-center justify-center text-gray-300 hover:text-[#C9A84C] hover:bg-amber-50 transition-colors text-xs font-bold"
+                className="px-2 py-0.5 rounded-full text-xs font-bold bg-[#C9A84C] text-[#1B2E4B] hover:bg-amber-400 transition-colors flex items-center gap-0.5 shadow-sm"
                 title="Add as crossover to another team"
               >
-                ↗
+                + ↗
               </button>
             )}
           </div>
