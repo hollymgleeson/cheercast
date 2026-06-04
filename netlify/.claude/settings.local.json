@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(extract-text CheerCast_Claude_Code_Brief.docx)",
+      "Bash(pandoc CheerCast_Claude_Code_Brief.docx -t markdown)",
+      "Bash(pandoc /Users/hollygleeson/Dropbox/CheerCast/CheerCast_Claude_Code_Brief.docx -t markdown)",
+      "Bash(python3 -c ' *)",
+      "Bash(git -C /Users/hollygleeson/Dropbox/CheerCast log --oneline)",
+      "Bash(brctl download *)",
+      "Bash(open /Users/hollygleeson/Dropbox/CheerCast)",
+      "Bash(npm list *)",
+      "Bash(npm install *)",
+      "Bash(find /usr/local/bin /opt/homebrew/bin ~/.nvm ~/.volta /usr/local/lib -name \"node\" 2>/dev/null | head -5)",
+      "Bash(/usr/local/bin/node --version)",
+      "Bash(command -v node)",
+      "Bash(ls \"/Users/hollygleeson/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/8f45051a-f136-466d-a225-6970e71baf83/db94f5ca-4b39-4b01-9f7f-08725ee45d97/\")",
+      "Bash(find /opt/homebrew -name \"node\" -type f 2>/dev/null | head -3)",
+      "Bash(python3 -c \"import docx; print\\('ok'\\)\")",
+      "Bash(python3 -c \"import pip; print\\('pip ok'\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(open /Users/hollygleeson/Dropbox/CheerCast/CheerCast_Pilot_Agreement.docx)",
+      "Bash(python3 /Users/hollygleeson/Dropbox/CheerCast/make_pilot_agreement.py)",
+      "Bash(curl -s 'https://vxyxvjyjpgkweefcnlvp.supabase.co/auth/v1/admin/users?page=1&per_page=50' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4')",
+      "Bash(python3 -c \"import sys,json; users=json.load\\(sys.stdin\\).get\\('users',[]\\); [print\\(u['email'], u['id']\\) for u in users]\")",
+      "Bash(curl -s -X PATCH https://vxyxvjyjpgkweefcnlvp.supabase.co/rest/v1/user_profiles?id=eq.18310f4e-6ad5-4fd8-a520-d2c8459ae614 -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{\"gym_id\": \"a65bf11d-e38f-481c-ac64-9faf1d06eaf4\"}')",
+      "Bash(curl -s -X PATCH https://vxyxvjyjpgkweefcnlvp.supabase.co/rest/v1/gyms?id=eq.a65bf11d-e38f-481c-ac64-9faf1d06eaf4 -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Content-Type: application/json' -H 'Prefer: return=representation' -d '{ *)",
+      "Bash(python3 merge_athletes.py)",
+      "Bash(curl -s 'https://vxyxvjyjpgkweefcnlvp.supabase.co/rest/v1/athletes?gym_id=eq.a65bf11d-e38f-481c-ac64-9faf1d06eaf4&select=id' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4')",
+      "Bash(python3 -c \"import sys,json; print\\(len\\(json.load\\(sys.stdin\\)\\), 'athletes currently'\\)\")",
+      "Bash(curl -s -X POST https://vxyxvjyjpgkweefcnlvp.supabase.co/auth/v1/token?grant_type=password -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5ODc0NDYsImV4cCI6MjA5NTU2MzQ0Nn0.O4KX5vhuMRXqGIjtXLm0N7kZr1crUrfIODfR-lkbxPw' -H 'Content-Type: application/json' -d '{\"email\": \"Kedronad@gmail.com\", \"password\": \"Kedron2025!\"}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('✅ Login works' if 'access_token' in d else '❌ Failed: ' + d.get\\('error_description','unknown'\\)\\)\")",
+      "Bash(sed -n '1,50p' /Users/hollygleeson/Dropbox/CheerCast/src/pages/EvalSessionPage.jsx)",
+      "Bash(sed -n '140,200p' /Users/hollygleeson/Dropbox/CheerCast/src/pages/EvalSessionPage.jsx)",
+      "Bash(npm run *)",
+      "Bash(node_modules/.bin/vite build *)",
+      "Bash(find /Users/hollygleeson -name \"node\" -type f 2>/dev/null | grep -v node_modules | head -5)",
+      "Bash(npm --version)"
+    ]
+  }
+}
