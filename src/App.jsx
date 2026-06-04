@@ -15,6 +15,7 @@ import AthleteProfilePage from './pages/AthleteProfilePage'
 import EvalSessionPage from './pages/EvalSessionPage'
 import TeamDetailPage from './pages/TeamDetailPage'
 import JoinPage from './pages/JoinPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -38,6 +39,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
       <Route path="/join/:token" element={<JoinPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
       <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
       <Route path="/athletes" element={<ProtectedRoute><AthletesPage /></ProtectedRoute>} />
       <Route path="/athletes/:id" element={<ProtectedRoute><AthleteProfilePage /></ProtectedRoute>} />
