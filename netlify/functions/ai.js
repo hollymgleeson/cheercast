@@ -1,7 +1,7 @@
 // Netlify serverless function for all AI calls
 // Keeps the Anthropic API key server-side only
 
-const MODEL = 'claude-sonnet-4-20250514'
+const MODEL = 'claude-sonnet-4-6'
 
 export default async function handler(req, context) {
   if (req.method !== 'POST') {

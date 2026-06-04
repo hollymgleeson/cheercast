@@ -13,7 +13,8 @@
       "Bash(xargs sed -i '' 's/#C9A84C/#8b002e/g')",
       "Bash(xargs sed -i '' \"s/bg-\\\\[#8b002e\\\\] text-\\\\[#1B2E4B\\\\]/bg-[#8b002e] text-white/g\")",
       "Bash(curl -s https://api.anthropic.com/v1/models -H 'x-api-key: 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' -H 'anthropic-version: 2023-06-01')",
-      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(m['id']\\) for m in data.get\\('data',[]\\)]\")"
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(m['id']\\) for m in data.get\\('data',[]\\)]\")",
+      "Bash(git add *)"
     ]
   }
 }
