@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Modal from '../../components/Modal'
 import Button from '../../components/Button'
 
-const AGE_DIVISIONS = ['tiny', 'mini', 'youth', 'junior', 'senior', 'open']
+const AGE_DIVISIONS = ['tiny', 'mini', 'pee_wee', 'youth', 'junior', 'senior', 'open']
 const TIERS = ['elite', 'prep', 'novice']
 const LEVELS = ['1', '1.2', '2', '2.1', '3', '3.1', '4', '4.2', '5', '6', '7']
 

@@ -108,9 +108,10 @@ export default function AddTeamModal({ open, onClose, onCreated }) {
 
         <div className="grid grid-cols-2 gap-4">
           {select('Age Division', 'age_division', [
-            {value:'tiny',label:'Tiny'},{value:'mini',label:'Mini'},
-            {value:'youth',label:'Youth'},{value:'junior',label:'Junior'},
-            {value:'senior',label:'Senior'},{value:'open',label:'Open'},
+            {value:'tiny',label:'Tiny (6U)'},{value:'mini',label:'Mini (8U)'},
+            {value:'pee_wee',label:'Pee Wee (10U)'},{value:'youth',label:'Youth (12U)'},
+            {value:'junior',label:'Junior (14U)'},{value:'senior',label:'Senior (18U)'},
+            {value:'open',label:'Open'},
           ], true)}
           {field('Season Year', 'season_year', 'number')}
         </div>

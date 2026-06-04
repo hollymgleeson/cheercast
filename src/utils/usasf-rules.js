@@ -58,7 +58,8 @@ export function getAgeDivision(dateOfBirth, seasonYear, customConfig = null) {
   const age = calculateAgeOnCutoff(dateOfBirth, seasonYear)
   if (age <= 5) return 'tiny'
   if (age <= 8) return 'mini'
-  if (age <= 11) return 'youth'
+  if (age <= 10) return 'pee_wee'
+  if (age <= 12) return 'youth'
   if (age <= 14) return 'junior'
   if (age <= 18) return 'senior'
   return 'open'
@@ -114,7 +115,7 @@ export function checkCrossoverMaximum(athlete, assignments) {
 
 export function checkAgeDivision(athlete, team, seasonYear, customConfig = null) {
   const athleteDiv = getAgeDivision(athlete.date_of_birth, seasonYear, customConfig)
-  const divOrder = ['tiny', 'mini', 'youth', 'junior', 'senior', 'open']
+  const divOrder = ['tiny', 'mini', 'pee_wee', 'youth', 'junior', 'senior', 'open']
   const athleteIndex = divOrder.indexOf(athleteDiv)
   const teamIndex = divOrder.indexOf(team.age_division)
 
