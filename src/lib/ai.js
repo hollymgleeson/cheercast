@@ -2,40 +2,23 @@
 // Uses claude-sonnet-4-20250514 for all calls.
 // AI never takes action — always returns recommendations a human approves.
 
-// All AI calls go directly to Anthropic API
-// VITE_ANTHROPIC_API_KEY is set in .env.local (dev) and Netlify env vars (prod)
-
-const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY || ''
-const MODEL = 'claude-sonnet-4-6'
+// All AI calls route through the Netlify serverless function.
+// The API key never touches the browser — it lives only in Netlify env vars.
 
 async function callClaude(systemPrompt, userMessage) {
-  if (!API_KEY) {
-    throw new Error('Anthropic API key not configured. Please check environment variables.')
-  }
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+  const response = await fetch('/.netlify/functions/ai', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': API_KEY,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 8000,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userMessage }],
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system: systemPrompt, user: userMessage, max_tokens: 8000 }),
   })
 
   if (!response.ok) {
     const err = await response.json()
-    throw new Error(err.error?.message || 'AI request failed')
+    throw new Error(err.error || 'AI request failed')
   }
 
   const data = await response.json()
-  let text = data.content[0].text
+  let text = data.text
   // Strip markdown code fences if present
   text = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/\s*```$/i, '').trim()
   try { return JSON.parse(text) } catch { return { raw: text } }
