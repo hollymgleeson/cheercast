@@ -18,7 +18,44 @@ export function calculateAgeOnCutoff(dateOfBirth, seasonYear) {
   return age
 }
 
-export function getAgeDivision(dateOfBirth, seasonYear) {
+// Get age division using USASF standard OR custom gym config
+// customConfig = gym.settings?.age_division_config
+export function getAgeDivision(dateOfBirth, seasonYear, customConfig = null) {
+  if (!dateOfBirth) return null
+
+  if (customConfig?.use_custom && customConfig?.divisions?.length) {
+    const birthYear = new Date(dateOfBirth).getFullYear()
+    const mode = customConfig.mode || 'birth_year'
+
+    if (mode === 'birth_year') {
+      // Sort divisions by cutoff_birth_year descending (oldest division first)
+      const sorted = [...customConfig.divisions]
+        .filter(d => d.cutoff_birth_year)
+        .sort((a, b) => a.cutoff_birth_year - b.cutoff_birth_year)
+
+      // Find the division: athlete must be born in cutoff_birth_year or later
+      // The youngest division with cutoff_birth_year >= athlete's birth year
+      for (const div of sorted) {
+        if (birthYear >= div.cutoff_birth_year) {
+          return div.name || div.label?.toLowerCase().replace(/\s*\(.*\)/, '').trim()
+        }
+      }
+      // If birth year is older than all cutoffs, return the oldest division
+      return sorted[0]?.name || 'senior'
+    } else {
+      // Age cutoff mode
+      const age = calculateAgeOnCutoff(dateOfBirth, seasonYear)
+      const sorted = [...customConfig.divisions]
+        .filter(d => d.max_age)
+        .sort((a, b) => a.max_age - b.max_age)
+      for (const div of sorted) {
+        if (age <= div.max_age) return div.name || div.label?.toLowerCase()
+      }
+      return sorted[sorted.length - 1]?.name || 'open'
+    }
+  }
+
+  // USASF standard
   const age = calculateAgeOnCutoff(dateOfBirth, seasonYear)
   if (age <= 5) return 'tiny'
   if (age <= 8) return 'mini'

@@ -5,10 +5,12 @@ import PageHeader from '../components/PageHeader'
 import Button from '../components/Button'
 import SkillsConfigTab from '../modules/settings/SkillsConfigTab'
 import TeamMembersTab from '../modules/settings/TeamMembersTab'
+import AgeDivisionsTab from '../modules/settings/AgeDivisionsTab'
 
 const TABS = [
   { id: 'gym', label: 'Gym Profile' },
   { id: 'members', label: 'Team Members' },
+  { id: 'age_divisions', label: 'Age Divisions' },
   { id: 'skills', label: 'Skills Configuration' },
   { id: 'account', label: 'My Account' },
 ]
@@ -143,6 +145,9 @@ export default function SettingsPage() {
 
             {/* Team Members Tab */}
             {tab === 'members' && <TeamMembersTab />}
+
+            {/* Age Divisions Tab */}
+            {tab === 'age_divisions' && <AgeDivisionsTab />}
 
             {/* Skills Configuration Tab */}
             {tab === 'skills' && <SkillsConfigTab />}
