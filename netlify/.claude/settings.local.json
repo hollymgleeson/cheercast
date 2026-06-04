@@ -34,7 +34,11 @@
       "Bash(npm run *)",
       "Bash(node_modules/.bin/vite build *)",
       "Bash(find /Users/hollygleeson -name \"node\" -type f 2>/dev/null | grep -v node_modules | head -5)",
-      "Bash(npm --version)"
+      "Bash(npm --version)",
+      "Bash(curl -s 'https://vxyxvjyjpgkweefcnlvp.supabase.co/rest/v1/athletes?gym_id=eq.a65bf11d-e38f-481c-ac64-9faf1d06eaf4&select=id,first_name,last_name,date_of_birth,age_division&order=last_name' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4')",
+      "Bash(curl -s 'https://vxyxvjyjpgkweefcnlvp.supabase.co/rest/v1/athletes?gym_id=eq.a65bf11d-e38f-481c-ac64-9faf1d06eaf4&select=id,date_of_birth,age_division' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4')",
+      "Bash(curl -s 'https://vxyxvjyjpgkweefcnlvp.supabase.co/rest/v1/gyms?id=eq.a65bf11d-e38f-481c-ac64-9faf1d06eaf4&select=settings' -H 'apikey: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4' -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4eXh2anlqcGdrd2VlZmNubHZwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk4NzQ0NiwiZXhwIjoyMDk1NTYzNDQ2fQ.aoZ6W_ISEandKp6GiCmgqWrqpzPSxDWPdHZyEV2LsN4')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d[0]['settings'], indent=2\\)\\)\")"
     ]
   }
 }

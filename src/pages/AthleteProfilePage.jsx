@@ -111,7 +111,9 @@ export default function AthleteProfilePage() {
     )
   }
 
-  const ageDivision = athlete.date_of_birth
+  // Use stored age_division from DB (already calculated correctly on import/save)
+  // Only recalculate if we have the gym's custom config loaded
+  const ageDivision = ageDivisionConfig
     ? getAgeDivision(athlete.date_of_birth, CURRENT_YEAR, ageDivisionConfig)
     : athlete.age_division
 
