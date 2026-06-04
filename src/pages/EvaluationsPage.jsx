@@ -225,7 +225,7 @@ export default function EvaluationsPage() {
   // Multi-session setup
   const [sessionCount, setSessionCount] = useState(1)
   const [sessionDates, setSessionDates] = useState([''])
-  const [round, setRound] = useState('1')
+  const [sessionNames, setSessionNames] = useState([''])
   const [seasonYear, setSeasonYear] = useState(new Date().getFullYear())
   const [notes, setNotes] = useState('')
   const [creating, setCreating] = useState(false)
@@ -255,6 +255,11 @@ export default function EvaluationsPage() {
       while (next.length < count) next.push('')
       return next.slice(0, count)
     })
+    setSessionNames(prev => {
+      const next = [...prev]
+      while (next.length < count) next.push('')
+      return next.slice(0, count)
+    })
   }
 
   async function handleCreate(e) {
@@ -266,14 +271,17 @@ export default function EvaluationsPage() {
     setCreateError('')
     try {
       const created = []
-      for (const date of filledDates) {
+      for (let i = 0; i < sessionDates.length; i++) {
+        const date = sessionDates[i]
+        if (!date) continue
+        const name = sessionNames[i] || (sessionCount > 1 ? `Session ${i + 1}` : null)
         const session = await createEvalSession({
           gym_id: gymId,
           season_year: parseInt(seasonYear),
-          round: parseInt(round),
+          round: i + 1,
           status: 'scheduled',
           eval_date: date,
-          notes: notes || null,
+          notes: [name, notes].filter(Boolean).join(' — ') || null,
           ai_report_generated: false,
         })
         created.push(session)
@@ -281,6 +289,7 @@ export default function EvaluationsPage() {
       setSessions(prev => [...created.reverse(), ...prev])
       setShowCreate(false)
       setSessionDates([''])
+      setSessionNames([''])
       setSessionCount(1)
       setNotes('')
     } catch (err) {
@@ -314,7 +323,11 @@ export default function EvaluationsPage() {
               <div key={session.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center justify-between hover:shadow-md transition-shadow">
                 <div>
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
-                    <span className="font-bold text-[#1B2E4B]">Round {session.round} — {session.season_year}</span>
+                    <span className="font-bold text-[#1B2E4B]">
+                      {session.notes?.split(' — ')[0] && session.notes.split(' — ')[0] !== session.notes
+                        ? session.notes.split(' — ')[0]
+                        : `Eval Session — ${session.season_year}`}
+                    </span>
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_STYLES[session.status] ?? 'bg-gray-100 text-gray-600'}`}>
                       {session.status}
                     </span>
@@ -350,21 +363,6 @@ export default function EvaluationsPage() {
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{createError}</div>
           )}
 
-          {/* Round */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Round</label>
-            <div className="grid grid-cols-2 gap-3">
-              {['1', '2'].map(r => (
-                <button key={r} type="button" onClick={() => setRound(r)}
-                  className={`py-3 rounded-xl border-2 text-sm font-semibold transition-all ${round === r ? 'border-[#8b002e] bg-[#8b002e]/5 text-[#8b002e]' : 'border-gray-200 text-gray-500 hover:border-gray-300'}`}>
-                  <div className="text-lg mb-0.5">{r === '1' ? '✦' : '◎'}</div>
-                  Round {r}
-                  <div className="text-xs font-normal opacity-70 mt-0.5">{r === '1' ? 'Skills' : 'Stunting Groups'}</div>
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Number of sessions */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -380,15 +378,15 @@ export default function EvaluationsPage() {
             </div>
           </div>
 
-          {/* Dates for each session */}
-          <div className="space-y-2">
+          {/* Dates and names for each session */}
+          <div className="space-y-3">
             <label className="block text-sm font-medium text-gray-700">
               Eval Date{sessionCount > 1 ? 's' : ''} <span className="text-red-500">*</span>
             </label>
             {Array.from({ length: sessionCount }).map((_, i) => (
-              <div key={i} className="flex items-center gap-2">
+              <div key={i} className="space-y-1.5">
                 {sessionCount > 1 && (
-                  <span className="text-xs text-gray-400 w-16 flex-shrink-0">Session {i + 1}</span>
+                  <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Session {i + 1}</div>
                 )}
                 <input
                   type="date"
@@ -398,7 +396,18 @@ export default function EvaluationsPage() {
                     next[i] = e.target.value
                     setSessionDates(next)
                   }}
-                  className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8b002e]"
+                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8b002e]"
+                />
+                <input
+                  type="text"
+                  value={sessionNames[i] || ''}
+                  onChange={e => {
+                    const next = [...sessionNames]
+                    next[i] = e.target.value
+                    setSessionNames(next)
+                  }}
+                  placeholder={`Name (optional) — e.g. Tumbling Day, Skills`}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8b002e] text-gray-600"
                 />
               </div>
             ))}
