@@ -114,10 +114,17 @@ export function checkCrossoverMaximum(athlete, assignments) {
 }
 
 export function checkAgeDivision(athlete, team, seasonYear, customConfig = null) {
-  const athleteDiv = getAgeDivision(athlete.date_of_birth, seasonYear, customConfig)
   const divOrder = ['tiny', 'mini', 'pee_wee', 'youth', 'junior', 'senior', 'open']
+
+  // Prefer stored age_division on the athlete (already calculated with gym's custom config)
+  // Fall back to calculating if not stored
+  const athleteDiv = athlete.age_division || getAgeDivision(athlete.date_of_birth, seasonYear, customConfig)
+
   const athleteIndex = divOrder.indexOf(athleteDiv)
   const teamIndex = divOrder.indexOf(team.age_division)
+
+  // If either division isn't in our list (e.g. null/unknown), skip the check
+  if (athleteIndex === -1 || teamIndex === -1) return null
 
   if (athleteIndex > teamIndex) {
     return {
