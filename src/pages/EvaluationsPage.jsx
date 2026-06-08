@@ -278,7 +278,7 @@ export default function EvaluationsPage() {
         const session = await createEvalSession({
           gym_id: gymId,
           season_year: parseInt(seasonYear),
-          round: i + 1,
+          round: 1,
           status: 'scheduled',
           eval_date: date,
           notes: [name, notes].filter(Boolean).join(' — ') || null,
