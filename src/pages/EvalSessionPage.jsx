@@ -299,7 +299,11 @@ export default function EvalSessionPage() {
             ← {view === 'scoring' ? 'Athletes' : 'Back'}
           </button>
           <div>
-            <div className="text-white font-bold text-sm">Round {session.round} Evaluation</div>
+            <div className="text-white font-bold text-sm">
+              {session.notes?.split(' — ')[0] && session.notes.split(' — ')[0] !== session.notes
+                ? session.notes.split(' — ')[0]
+                : 'Eval Session'}
+            </div>
             <div className="text-white/50 text-xs">
               {session.eval_date
                 ? new Date(session.eval_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })

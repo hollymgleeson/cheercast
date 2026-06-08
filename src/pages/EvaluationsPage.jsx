@@ -303,7 +303,7 @@ export default function EvaluationsPage() {
     <div>
       <PageHeader
         title="Evaluations"
-        subtitle="Manage eval sessions for Round 1 (skills) and Round 2 (stunting)"
+        subtitle="Manage eval sessions"
         actions={<Button variant="gold" onClick={() => setShowCreate(true)}>+ New Eval Session</Button>}
       />
 
