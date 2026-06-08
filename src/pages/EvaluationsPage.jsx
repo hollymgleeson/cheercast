@@ -212,6 +212,216 @@ function AttendanceModal({ open, onClose, session, gymId }) {
   )
 }
 
+// ─── Attendance Grid ──────────────────────────────────────────────────────────
+
+function AttendanceGrid({ sessions, gymId }) {
+  const [athletes, setAthletes] = useState([])
+  const [attendance, setAttendance] = useState({}) // `${athleteId}_${sessionId}` -> status
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [search, setSearch] = useState('')
+
+  const evalSessions = sessions.filter(s => s.eval_date).sort((a, b) => new Date(a.eval_date) - new Date(b.eval_date))
+
+  useEffect(() => {
+    if (!gymId || evalSessions.length === 0) { setLoading(false); return }
+    loadData()
+  }, [gymId, sessions.length])
+
+  async function loadData() {
+    setLoading(true)
+    try {
+      const [athleteData, { data: existingAttendance }] = await Promise.all([
+        getAthletes(gymId, { status: 'active' }),
+        supabase.from('attendance')
+          .select('*')
+          .eq('gym_id', gymId)
+          .in('session_date', evalSessions.map(s => s.eval_date))
+      ])
+      setAthletes(athleteData)
+      const map = {}
+      existingAttendance?.forEach(a => {
+        const session = evalSessions.find(s => s.eval_date === a.session_date)
+        if (session) map[`${a.athlete_id}_${session.id}`] = a.status
+      })
+      setAttendance(map)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function toggleStatus(athleteId, sessionId, sessionDate) {
+    const key = `${athleteId}_${sessionId}`
+    const current = attendance[key]
+    const next = current === 'present' ? 'absent' : current === 'absent' ? 'excused' : 'present'
+    setAttendance(prev => ({ ...prev, [key]: next }))
+  }
+
+  async function saveAll() {
+    setSaving(true)
+    try {
+      // Delete all existing attendance for these eval dates
+      await supabase.from('attendance')
+        .delete()
+        .eq('gym_id', gymId)
+        .in('session_date', evalSessions.map(s => s.eval_date))
+
+      // Rebuild from current state
+      const rows = []
+      Object.entries(attendance).forEach(([key, status]) => {
+        const [athleteId, sessionId] = key.split('_')
+        const session = evalSessions.find(s => s.id === sessionId)
+        if (session && status) {
+          rows.push({ gym_id: gymId, athlete_id: athleteId, session_date: session.eval_date, session_type: 'practice', status })
+        }
+      })
+      if (rows.length > 0) await supabase.from('attendance').insert(rows)
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2000)
+    } catch (err) {
+      console.error(err)
+      alert('Could not save. Please try again.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  function markAllPresent(sessionId, sessionDate) {
+    const updates = {}
+    athletes.forEach(a => { updates[`${a.id}_${sessionId}`] = 'present' })
+    setAttendance(prev => ({ ...prev, ...updates }))
+  }
+
+  const filtered = athletes.filter(a =>
+    `${a.first_name} ${a.last_name}`.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const STATUS_CELL = {
+    present: 'bg-green-500 text-white',
+    absent: 'bg-red-400 text-white',
+    excused: 'bg-amber-400 text-white',
+  }
+
+  if (evalSessions.length === 0) {
+    return <div className="text-center py-16 text-gray-400">Create eval sessions first to track attendance.</div>
+  }
+
+  if (loading) return <div className="text-center py-12 text-gray-400">Loading...</div>
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search athletes..."
+            className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#8b002e] w-48"
+          />
+          <div className="flex items-center gap-3 text-xs text-gray-500">
+            <span className="flex items-center gap-1"><span className="w-4 h-4 rounded bg-green-500 inline-block"/> Present</span>
+            <span className="flex items-center gap-1"><span className="w-4 h-4 rounded bg-red-400 inline-block"/> Absent</span>
+            <span className="flex items-center gap-1"><span className="w-4 h-4 rounded bg-amber-400 inline-block"/> Excused</span>
+            <span className="flex items-center gap-1"><span className="w-4 h-4 rounded bg-gray-100 border inline-block"/> Not marked</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {saved && <span className="text-xs text-green-600 font-medium">Saved!</span>}
+          <Button onClick={saveAll} loading={saving} size="sm">Save Attendance</Button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-gray-100 bg-[#F5F6F7]">
+              <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide sticky left-0 bg-[#F5F6F7] min-w-48">
+                Athlete
+              </th>
+              {evalSessions.map(session => (
+                <th key={session.id} className="px-3 py-3 text-center min-w-32">
+                  <div className="text-xs font-semibold text-[#1B2E4B]">
+                    {session.notes?.split(' — ')[0] && session.notes.split(' — ')[0] !== session.notes
+                      ? session.notes.split(' — ')[0]
+                      : new Date(session.eval_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </div>
+                  <div className="text-xs text-gray-400 font-normal">
+                    {new Date(session.eval_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </div>
+                  <button
+                    onClick={() => markAllPresent(session.id, session.eval_date)}
+                    className="text-xs text-[#8b002e] hover:underline font-normal mt-0.5 block w-full"
+                  >
+                    All present
+                  </button>
+                </th>
+              ))}
+              <th className="px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wide">Total</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-50">
+            {filtered.map(athlete => {
+              const presentCount = evalSessions.filter(s => attendance[`${athlete.id}_${s.id}`] === 'present').length
+              return (
+                <tr key={athlete.id} className="hover:bg-[#F5F6F7] transition-colors">
+                  <td className="px-4 py-2.5 sticky left-0 bg-white">
+                    <div className="text-sm font-medium text-[#1B2E4B]">{athlete.first_name} {athlete.last_name}</div>
+                    <div className="text-xs text-gray-400 capitalize">{athlete.age_division}</div>
+                  </td>
+                  {evalSessions.map(session => {
+                    const key = `${athlete.id}_${session.id}`
+                    const status = attendance[key]
+                    return (
+                      <td key={session.id} className="px-3 py-2.5 text-center">
+                        <button
+                          onClick={() => toggleStatus(athlete.id, session.id, session.eval_date)}
+                          className={`w-10 h-8 rounded-lg text-xs font-bold transition-all hover:opacity-80 ${
+                            status ? STATUS_CELL[status] : 'bg-gray-100 text-gray-300 hover:bg-gray-200'
+                          }`}
+                          title={status || 'Click to mark'}
+                        >
+                          {status === 'present' ? '✓' : status === 'absent' ? '✗' : status === 'excused' ? 'E' : '—'}
+                        </button>
+                      </td>
+                    )
+                  })}
+                  <td className="px-3 py-2.5 text-center">
+                    <span className={`text-xs font-bold ${
+                      presentCount === evalSessions.length ? 'text-green-600' :
+                      presentCount === 0 ? 'text-gray-300' : 'text-amber-600'
+                    }`}>
+                      {presentCount}/{evalSessions.length}
+                    </span>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+          {/* Column totals */}
+          <tfoot>
+            <tr className="border-t border-gray-100 bg-[#F5F6F7]">
+              <td className="px-4 py-2 text-xs font-semibold text-gray-500 sticky left-0 bg-[#F5F6F7]">Present</td>
+              {evalSessions.map(session => {
+                const count = athletes.filter(a => attendance[`${a.id}_${session.id}`] === 'present').length
+                return (
+                  <td key={session.id} className="px-3 py-2 text-center text-xs font-bold text-green-600">
+                    {count}/{athletes.length}
+                  </td>
+                )
+              })}
+              <td />
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  )
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function EvaluationsPage() {
@@ -221,6 +431,7 @@ export default function EvaluationsPage() {
   const [loading, setLoading] = useState(true)
   const [showCreate, setShowCreate] = useState(false)
   const [attendanceSession, setAttendanceSession] = useState(null)
+  const [pageTab, setPageTab] = useState('sessions')
 
   // Multi-session setup
   const [sessionCount, setSessionCount] = useState(1)
@@ -303,11 +514,29 @@ export default function EvaluationsPage() {
     <div>
       <PageHeader
         title="Evaluations"
-        subtitle="Manage eval sessions"
+        subtitle="Manage eval sessions and track attendance"
         actions={<Button variant="gold" onClick={() => setShowCreate(true)}>+ New Eval Session</Button>}
       />
 
-      <div className="p-8">
+      {/* Tabs */}
+      <div className="flex border-b border-gray-200 bg-white px-8">
+        {[{ id: 'sessions', label: 'Sessions' }, { id: 'attendance', label: 'Attendance Grid' }].map(t => (
+          <button key={t.id} onClick={() => setPageTab(t.id)}
+            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${pageTab === t.id ? 'border-[#8b002e] text-[#1B2E4B]' : 'border-transparent text-gray-400 hover:text-gray-600'}`}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Attendance Grid Tab */}
+      {pageTab === 'attendance' && (
+        <div className="p-8">
+          <AttendanceGrid sessions={sessions} gymId={gymId} />
+        </div>
+      )}
+
+      {/* Sessions Tab */}
+      {pageTab === 'sessions' && <div className="p-8">
         {loading ? (
           <div className="text-center py-16 text-gray-400">Loading sessions...</div>
         ) : sessions.length === 0 ? (
@@ -366,7 +595,7 @@ export default function EvaluationsPage() {
             ))}
           </div>
         )}
-      </div>
+      </div>}
 
       {/* Create session modal */}
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="New Eval Session(s)" size="sm">
