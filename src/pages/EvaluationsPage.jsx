@@ -349,6 +349,18 @@ export default function EvaluationsPage() {
                   <Button variant="gold" size="sm" onClick={() => navigate(`/evaluations/${session.id}`)}>
                     Open Session
                   </Button>
+                  <button
+                    onClick={async () => {
+                      if (!confirm('Delete this eval session? This will also delete all scores recorded in it.')) return
+                      await supabase.from('eval_scores').delete().eq('eval_session_id', session.id)
+                      await supabase.from('eval_sessions').delete().eq('id', session.id)
+                      setSessions(prev => prev.filter(s => s.id !== session.id))
+                    }}
+                    className="text-gray-300 hover:text-red-400 transition-colors text-sm px-2"
+                    title="Delete session"
+                  >
+                    ✕
+                  </button>
                 </div>
               </div>
             ))}
