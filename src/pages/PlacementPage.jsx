@@ -773,7 +773,7 @@ export default function PlacementPage() {
           const key = `${teamId}_${athlete.id}`
           if (!seen.has(key)) {
             seen.add(key)
-            inserts.push({ team_id: teamId, athlete_id: athlete.id, gym_id: gymId, is_primary_team: false, crossover_order: idx + 2, status: 'active' })
+            inserts.push({ team_id: teamId, athlete_id: athlete.id, gym_id: gymId, is_primary_team: false, crossover_order: Math.min(idx + 2, 3), status: 'active' })
           }
         })
       })
