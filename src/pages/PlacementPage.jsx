@@ -751,21 +751,37 @@ export default function PlacementPage() {
   async function saveRoster() {
     setSaving(true)
     try {
-      await supabase.from('team_athletes').delete().eq('gym_id', gymId)
+      // Delete existing
+      const { error: delError } = await supabase.from('team_athletes').delete().eq('gym_id', gymId)
+      if (delError) throw delError
 
+      // Build insert list -- deduplicate by team_id+athlete_id
+      const seen = new Set()
       const inserts = []
+
       Object.entries(roster).forEach(([teamId, athletes]) => {
         athletes.forEach(athlete => {
-          inserts.push({ team_id: teamId, athlete_id: athlete.id, gym_id: gymId, is_primary_team: true, status: 'active' })
+          const key = `${teamId}_${athlete.id}`
+          if (!seen.has(key)) {
+            seen.add(key)
+            inserts.push({ team_id: teamId, athlete_id: athlete.id, gym_id: gymId, is_primary_team: true, status: 'active' })
+          }
         })
       })
       Object.entries(crossovers).forEach(([teamId, athletes]) => {
         athletes.forEach((athlete, idx) => {
-          inserts.push({ team_id: teamId, athlete_id: athlete.id, gym_id: gymId, is_primary_team: false, crossover_order: idx + 2, status: 'active' })
+          const key = `${teamId}_${athlete.id}`
+          if (!seen.has(key)) {
+            seen.add(key)
+            inserts.push({ team_id: teamId, athlete_id: athlete.id, gym_id: gymId, is_primary_team: false, crossover_order: idx + 2, status: 'active' })
+          }
         })
       })
 
-      if (inserts.length > 0) await supabase.from('team_athletes').insert(inserts)
+      if (inserts.length > 0) {
+        const { error: insertError } = await supabase.from('team_athletes').insert(inserts)
+        if (insertError) throw insertError
+      }
 
       // Update current_team_id to primary team
       for (const [teamId, athletes] of Object.entries(roster)) {
@@ -780,8 +796,8 @@ export default function PlacementPage() {
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (err) {
-      console.error(err)
-      alert('Could not save roster. Please try again.')
+      console.error('Save roster error:', err)
+      alert(`Could not save roster: ${err.message}`)
     } finally {
       setSaving(false)
     }
